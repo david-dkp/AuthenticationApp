@@ -18,7 +18,7 @@ import Twitter from "../../assets/Twitter.svg"
 import Github from "../../assets/Github.svg"
 import Footer from "../../components/Footer";
 
-function Login() {
+function Register() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
@@ -27,19 +27,19 @@ function Login() {
 
     const handleLoginSubmit = (e) => {
         e.preventDefault()
+
     }
 
     return <Box sx={{
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        flexDirection: "column",
         width: "100vw",
         minHeight: "100vh",
         backgroundColor: "background.default",
         overflow: "scroll",
     }}>
-        <Stack m={"10px"} alignItems={"center"} direction={"column"}>
+        <Stack m="10px" direction={"column"} alignItems={"center"}>
             <Box sx={{
                 backgroundColor: "background.default",
                 gap: "15px",
@@ -62,13 +62,19 @@ function Login() {
 
                 <Typography variant={"h1"} sx={{
                     color: "text.primary", alignSelf: "start", fontSize: "1.2em", fontWeight: "600"
-                }}>Login</Typography>
+                }}>Join thousands of learners from around the world</Typography>
+
+                <Typography variant={"body2"} component="p"
+                            sx={{color: "text.primary", alignSelf: "start", lineHeight: "1.3em"}}>Master web
+                    development by
+                    making real-life projects. There are
+                    multiple paths for
+                    you to choose</Typography>
 
                 <FormControl sx={{
                     my: "15px"
                 }} fullWidth onSubmit={handleLoginSubmit}>
-                    <TextField value={email} onChange={e => setEmail(e.target.value)} id="login-input-email"
-                               label="Email"
+                    <TextField value={email} onChange={e => setEmail(e.target.value)} id="register-input-email" label="Email"
                                type="email" variant="outlined" InputProps={{
                         startAdornment: (<InputAdornment position={"start"}>
                             <EmailRounded/>
@@ -76,7 +82,7 @@ function Login() {
                     }}/>
 
                     <TextField sx={{mt: "15px"}} value={password} onChange={e => setPassword(e.target.value)}
-                               id="login-input-password"
+                               id="register-input-password"
                                label="Password" type="password" variant="outlined"
                                InputProps={{
                                    startAdornment: (<InputAdornment position={"start"}>
@@ -84,8 +90,8 @@ function Login() {
                                    </InputAdornment>)
                                }}/>
 
-                    <Button sx={{mt: "20px"}} type="submit" onClick={handleLoginSubmit} variant="contained"
-                            fullWidth>Login</Button>
+                    <Button sx={{mt: "20px"}} type="submit" onClick={handleLoginSubmit} variant="contained" fullWidth>
+                        Start Coding Now</Button>
                 </FormControl>
                 <Typography variant={"body2"} component="p" sx={{
                     color: "#828282", fontSize: "0.8em",
@@ -102,17 +108,18 @@ function Login() {
                     width: "100%",
                     textAlign: "center",
                     color: "#828282", fontSize: "0.8em",
-                }} variant={"body2"}>Don't have an account yet?<Link sx={{
+                }} variant={"body2"}>Already a member?<Link sx={{
                     textDecoration: "none"
-                }} href="/register">
+                }} href="/login">
                     <Typography
                         component={"span"} fontSize={"1em"}
-                        color={"blue"}> Register</Typography>
+                        color={"blue"}> Login</Typography>
                 </Link></Typography>
+
             </Box>
-            <Footer sx={{mt: "12px", fontSize: "0.8em", width: "100%"}}/>
+            <Footer sx={{mt: "12px",fontSize: "0.8em", width: "100%"}}/>
         </Stack>
     </Box>
 }
 
-export default Login
+export default Register
