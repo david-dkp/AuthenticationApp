@@ -17,6 +17,7 @@ import FacebookSvg from "../../assets/Facebook.svg"
 import Twitter from "../../assets/Twitter.svg"
 import Github from "../../assets/Github.svg"
 import Footer from "../../components/Footer";
+import authApi from "../../apis/authApi";
 
 function Login() {
     const [email, setEmail] = useState("")
@@ -25,8 +26,14 @@ function Login() {
     const theme = useTheme()
     const devChallengesImage = theme.palette.mode === "light" ? DevChallengesDarkImg : DevChallengesLightImg
 
-    const handleLoginSubmit = (e) => {
+    const handleLoginSubmit = async (e) => {
         e.preventDefault()
+        try {
+            const result = await authApi.login(email, password)
+            console.log(result)
+        } catch(e) {
+            console.log(e)
+        }
     }
 
     return <Box sx={{
@@ -92,7 +99,7 @@ function Login() {
                 }}>or continue with these social profile</Typography>
 
                 <Stack justifyContent={"center"} spacing={0.7} direction="row">
-                    <IconButton><img src={GoogleSvg.src} alt="Google"/></IconButton>
+                    <IconButton href={"/api/login/google"}><img src={GoogleSvg.src} alt="Google"/></IconButton>
                     <IconButton><img src={FacebookSvg.src} alt="Facebook"/></IconButton>
                     <IconButton><img src={Twitter.src} alt="Twitter"/></IconButton>
                     <IconButton><img src={Github.src} alt="Github"/></IconButton>

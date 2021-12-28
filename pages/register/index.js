@@ -17,17 +17,26 @@ import FacebookSvg from "../../assets/Facebook.svg"
 import Twitter from "../../assets/Twitter.svg"
 import Github from "../../assets/Github.svg"
 import Footer from "../../components/Footer";
+import authApi from "../../apis/authApi";
 
 function Register() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
+    const [emailErrorText, setEmailErrorText] = useState("")
+    const [passwordErrorText, setPasswordErrorText] = useState("")
+
     const theme = useTheme()
     const devChallengesImage = theme.palette.mode === "light" ? DevChallengesDarkImg : DevChallengesLightImg
 
-    const handleLoginSubmit = (e) => {
+    const handleLoginSubmit = async (e) => {
         e.preventDefault()
-
+        const result = await authApi.register(email, password)
+        if (result.data.error) {
+            setEmailErrorText(result.data.error.email ?? "")
+            setPasswordErrorText(result.data.error.password ?? "")
+        }
+        console.log(result)
     }
 
     return <Box sx={{
@@ -74,14 +83,16 @@ function Register() {
                 <FormControl sx={{
                     my: "15px"
                 }} fullWidth onSubmit={handleLoginSubmit}>
-                    <TextField value={email} onChange={e => setEmail(e.target.value)} id="register-input-email" label="Email"
-                               type="email" variant="outlined" InputProps={{
+                    <TextField value={email} onChange={e => setEmail(e.target.value)} id="register-input-email"
+                               label="Email"
+                               type="email" variant="outlined" error={emailErrorText.length > 0} helperText={emailErrorText} InputProps={{
                         startAdornment: (<InputAdornment position={"start"}>
                             <EmailRounded/>
                         </InputAdornment>)
                     }}/>
 
-                    <TextField sx={{mt: "15px"}} value={password} onChange={e => setPassword(e.target.value)}
+                    <TextField sx={{mt: "15px"}} value={password} error={passwordErrorText.length > 0} helperText={passwordErrorText}
+                               onChange={e => setPassword(e.target.value)}
                                id="register-input-password"
                                label="Password" type="password" variant="outlined"
                                InputProps={{
@@ -117,7 +128,7 @@ function Register() {
                 </Link></Typography>
 
             </Box>
-            <Footer sx={{mt: "12px",fontSize: "0.8em", width: "100%"}}/>
+            <Footer sx={{mt: "12px", fontSize: "0.8em", width: "100%"}}/>
         </Stack>
     </Box>
 }

@@ -3,8 +3,8 @@ module.exports = {
     async rewrites() {
         return [
             {
-                source: "/register",
-                destination: "/login"
+                source: "/api/:path*",
+                destination: "http://localhost:8000/:path*"
             }
         ]
     }
