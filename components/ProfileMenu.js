@@ -29,6 +29,7 @@ const StyledMenu = styled((props => (
             gap: "10px",
             borderRadius: "8px",
             fontSize: "12px",
+            fontFamily: "Nota Sans, sans-serif",
             "& .MuiSvgIcon-root": {
                 height: "20px"
             }
