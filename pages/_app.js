@@ -1,10 +1,14 @@
 import '../styles/globals.css'
+import axiosConfig from "../apis/axiosConfig"
 import {createTheme, ThemeProvider} from "@mui/material";
-import {createContext, useMemo, useState} from "react";
+import {createContext, useEffect, useMemo, useState} from "react";
+import userApi from "../apis/userApi";
+import App from "next/app"
 
 const getTheme = (mode) => createTheme({
     palette: {
         mode,
+        basic: "#828282",
         ...(mode === "light" ? {
             primary: {
                 main: '#2F80ED'
@@ -44,10 +48,16 @@ const getTheme = (mode) => createTheme({
     }
 });
 
-const ColorModeContext = createContext({toggleColorMode: () => {}, setColorMode: (mode) => {}})
+axiosConfig.configure()
+
+const ColorModeContext = createContext({
+    toggleColorMode: () => {
+    }, setColorMode: (mode) => {
+    }
+})
 
 function MyApp({Component, pageProps}) {
-    const [themeMode, setThemeMode] = useState("light")
+    const [themeMode, setThemeMode] = useState("dark")
     const theme = getTheme(themeMode)
 
     const colorMode = useMemo(
@@ -62,13 +72,26 @@ function MyApp({Component, pageProps}) {
         [],
     );
 
+    const getLayout = Component.getLayout || ((page) => page)
+
+    useEffect(() => {
+        userApi.getUser(1).then(r => console.log(r)).catch(e => console.log(e))
+    }, [])
+
     return (
         <ColorModeContext.Provider value={colorMode}>
             <ThemeProvider theme={theme}>
-                <Component {...pageProps} />
+                {getLayout(<Component {...pageProps} />)}
             </ThemeProvider>
         </ColorModeContext.Provider>
     )
 }
+
+MyApp.getInitialProps = async (appContext) => {
+    // calls page's `getInitialProps` and fills `appProps.pageProps`
+    const appProps = await App.getInitialProps(appContext);
+
+    return { ...appProps };
+};
 
 export default MyApp
