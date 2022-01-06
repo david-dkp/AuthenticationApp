@@ -4,7 +4,6 @@ import HomeLayout from "../components/HomeLayout";
 import Footer from "../components/Footer";
 
 const ProfileHeader = () => {
-
     return (
         <Box sx={{
             width: "100%",

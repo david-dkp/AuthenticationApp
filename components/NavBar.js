@@ -10,7 +10,7 @@ function Navbar() {
     return <AppBar elevation={0} sx={{
         backgroundColor: "background.default",
         boxShadow: "none"
-    }} position={"sticky"}>
+    }} position={"relative"}>
         <Container maxWidth={"lg"}>
             <Toolbar sx={{justifyContent: "space-between"}} disableGutters>
                 <img src={devChallengesImage.src} alt={"DevChallenges"}/>
