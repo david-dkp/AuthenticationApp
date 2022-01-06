@@ -1,8 +1,10 @@
 import {
     Box,
     Button,
-    FormControl, IconButton,
-    InputAdornment, Link,
+    FormControl,
+    IconButton,
+    InputAdornment,
+    Link,
     Stack,
     TextField,
     Typography,
@@ -31,7 +33,7 @@ function Login() {
         try {
             const result = await authApi.login(email, password)
             console.log(result)
-        } catch(e) {
+        } catch (e) {
             console.log(e)
         }
     }
@@ -48,10 +50,11 @@ function Login() {
     }}>
         <Stack m={"10px"} alignItems={"center"} direction={"column"}>
             <Box sx={{
+                minHeight: {xs: "100vh", sm: "auto"},
                 backgroundColor: "background.default",
                 gap: "15px",
                 borderRadius: "24px",
-                border: "1px solid #BDBDBD",
+                border: {sm: "1px solid #BDBDBD"},
                 display: "flex",
                 width: "100%",
                 maxWidth: 470,
