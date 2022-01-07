@@ -13,6 +13,4 @@ const configure = () => {
     });
 }
 
-module.exports = {
-    configure
-}
+module.exports.configure = configure
