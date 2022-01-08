@@ -1,10 +1,11 @@
 import {
+    Alert,
     Box,
     Button,
     FormControl,
     IconButton,
     InputAdornment,
-    Link,
+    Link, Snackbar,
     Stack,
     TextField,
     Typography,
@@ -22,6 +23,7 @@ import Footer from "../../components/Footer";
 import authApi from "../../apis/authApi";
 
 function Login() {
+    const [showError, setShowError] = useState(false)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
@@ -31,10 +33,9 @@ function Login() {
     const handleLoginSubmit = async (e) => {
         e.preventDefault()
         try {
-            const result = await authApi.login(email, password)
-            console.log(result)
+            await authApi.login(email, password)
         } catch (e) {
-            console.log(e)
+            setShowError(true)
         }
     }
 
@@ -48,16 +49,29 @@ function Login() {
         backgroundColor: "background.default",
         overflow: "scroll",
     }}>
-        <Stack m={"10px"} alignItems={"center"} direction={"column"}>
+        <Snackbar anchorOrigin={{
+            horizontal: "center",
+            vertical: "top"
+        }} open={showError}>
+            <Alert severity={"error"} onClose={() => setShowError(false)}>
+                Wrong email or password !
+            </Alert>
+        </Snackbar>
+        <Stack
+            sx={{
+            minHeight: {
+                xs: "100vh",
+                sm: "auto"
+            }
+        }}  justifyContent={"space-between"} p={"10px"} alignItems={"center"} direction={"column"}>
             <Box sx={{
-                minHeight: {xs: "100vh", sm: "auto"},
                 backgroundColor: "background.default",
                 gap: "15px",
                 borderRadius: "24px",
                 border: {sm: "1px solid #BDBDBD"},
                 display: "flex",
                 width: "100%",
-                maxWidth: 470,
+                maxWidth: "470px",
                 flexDirection: "column",
                 alignItems: "center",
                 py: "clamp(8px, 7vw, 40px)",
