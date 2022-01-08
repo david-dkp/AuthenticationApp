@@ -1,13 +1,24 @@
 import HomeLayout from "../../components/HomeLayout";
-import {Box, Button, FormControl, IconButton, InputAdornment, Stack, TextField, Typography} from "@mui/material";
+import {
+    Alert,
+    Box,
+    Button,
+    FormControl,
+    IconButton,
+    InputAdornment,
+    Snackbar,
+    Stack,
+    TextField,
+    Typography
+} from "@mui/material";
 import {
     ArrowBackIosRounded,
     PhotoCameraRounded,
-    VisibilityOff,
     VisibilityOffRounded,
     VisibilityRounded
 } from "@mui/icons-material";
 import {useEffect, useState} from "react";
+import userApi from "../../apis/userApi";
 
 const ChangeInfoHeader = () => {
     return (
@@ -26,10 +37,25 @@ const ChangeInfoHeader = () => {
 }
 
 const ChangePhoto = ({photoUrl, onFileSelected}) => {
+    const [photoFileSelected, setPhotoFileSelected] = useState(null)
+    const [currentPhotoUrl, setCurrentPhotoUrl] = useState(photoUrl)
 
     const handlePhotoImageChange = (e) => {
+        setPhotoFileSelected(e.target.files[0])
         onFileSelected(e.target.files[0])
     }
+
+    useEffect(() => {
+        if (!photoFileSelected) {
+            return
+        }
+
+        const objectUrl = URL.createObjectURL(photoFileSelected)
+        setCurrentPhotoUrl(objectUrl)
+
+        return () => URL.revokeObjectURL(objectUrl)
+    }, [photoFileSelected])
+
 
     return (
         <Button sx={{color: "white", padding: 0}} component={"label"}>
@@ -78,24 +104,70 @@ const ChangePhoto = ({photoUrl, onFileSelected}) => {
 }
 
 function EditProfile({user}) {
-    const [photoUrl, setPhotoUrl] = useState(user.photoUrl)
-    const [photoFileSelected, setPhotoFileSelected] = useState()
+    const [photoFileSelected, setPhotoFileSelected] = useState(null)
     const [showPassword, setShowPassword] = useState(false)
 
-    const onFileSelected = (file) => {
-        setPhotoFileSelected(file)
+    const [name, setName] = useState("")
+    const [bio, setBio] = useState("")
+    const [phoneNumber, setPhoneNumber] = useState("")
+
+    const [email, setEmail] = useState("")
+    const [emailErrorText, setEmailErrorText] = useState("")
+
+    const [password, setPassword] = useState("")
+    const [passwordErrorText, setPasswordErrorText] = useState("")
+
+    const [alertData, setAlertData] = useState({})
+    const [showAlert, setShowAlert] = useState(false)
+
+    const showSuccessAlert = () => {
+        setAlertData({severity: "success", message: "Your info has successfully been updated"})
+        setShowAlert(true)
     }
 
-    useEffect(() => {
-        if (!photoFileSelected) {
-            return
+    const showErrorAlert = (message) => {
+        setAlertData({severity: "error", message})
+        setShowAlert(true)
+    }
+
+    const clearFields = () => {
+        setName("")
+        setBio("")
+        setPhoneNumber("")
+        setEmail("")
+        setEmailErrorText("")
+        setPassword("")
+        setPasswordErrorText("")
+    }
+
+    const handleSubmit = async () => {
+        const formData = new FormData()
+
+        if (photoFileSelected) formData.append("photoFile", photoFileSelected)
+        if (name !== "") formData.append("name", name)
+        if (bio !== "") formData.append("bio", bio)
+        if (phoneNumber !== "") formData.append("phoneNumber", phoneNumber)
+
+        if (email !== "") formData.append("email", email)
+        if (password !== "") formData.append("password", password)
+
+        try {
+            const result = await userApi.updateUser(formData)
+
+            if (result.data.type === "success") {
+                clearFields()
+                showSuccessAlert()
+            } else {
+                if (result.data.message) {
+                    return showErrorAlert(result.data.message)
+                }
+                if (result.data.error.email) setEmailErrorText(result.data.error.email)
+                if (result.data.error.password) setPasswordErrorText(result.data.error.password)
+            }
+        } catch (e) {
+            showErrorAlert("Something went wrong, please try again.")
         }
-
-        const objectUrl = URL.createObjectURL(photoFileSelected)
-        setPhotoUrl(objectUrl)
-
-        return () => URL.revokeObjectURL(objectUrl)
-    }, [photoFileSelected])
+    }
 
     return (
         <Box sx={{
@@ -103,7 +175,15 @@ function EditProfile({user}) {
             backgroundColor: "background.default",
             color: "text.primary",
         }}>
-
+            <Snackbar
+                open={showAlert}
+                autoHideDuration={2000}
+                onClose={() => setShowAlert(false)}
+                >
+                <Alert onClose={() => setShowAlert(false)} severity={alertData.severity}>
+                    {alertData.message}
+                </Alert>
+            </Snackbar>
             <Box sx={{
                 display: "flex",
                 width: "100%",
@@ -150,7 +230,7 @@ function EditProfile({user}) {
                     }}
                     >
                         <Stack alignItems={"center"} flexDirection={"row"}>
-                            <ChangePhoto photoUrl={photoUrl} onFileSelected={onFileSelected}/>
+                            <ChangePhoto photoUrl={user.photoUrl} onFileSelected={setPhotoFileSelected}/>
                             <Typography sx={{
                                 ml: "2rem",
                                 color: "#828282",
@@ -176,12 +256,12 @@ function EditProfile({user}) {
 
                         <Stack gap={"5px"}>
                             <label htmlFor="edit-profile-email-input">Email</label>
-                            <TextField name={"email"} InputProps={{sx: { fontSize: "1em"}}} sx={{fontSize: "1em"}} type={"email"}  placeholder={"Enter your email..."} id="edit-profile-email-input" variant="outlined"/>
+                            <TextField error={emailErrorText !== ""} helperText={emailErrorText} name={"email"} InputProps={{sx: { fontSize: "1em"}}} sx={{fontSize: "1em"}} type={"email"}  placeholder={"Enter your email..."} id="edit-profile-email-input" variant="outlined"/>
                         </Stack>
 
                         <Stack gap={"5px"}>
                             <label htmlFor="edit-profile-password-input">Password</label>
-                            <TextField name={"password"} InputProps={{
+                            <TextField error={passwordErrorText !== ""} helperText={passwordErrorText} name={"password"} InputProps={{
                                 sx: {fontSize: "1em"},
                                 endAdornment: <InputAdornment position={"end"}>
                                     <IconButton
@@ -196,7 +276,7 @@ function EditProfile({user}) {
                             }} sx={{fontSize: "1em"}} type={showPassword ? "text" : "password"} placeholder={"Enter your password..."} id="edit-profile-password-input" variant="outlined"/>
                         </Stack>
 
-                        <Button sx={{paddingInline: "1.5em", alignSelf: "start"}} variant={"contained"} type={"submit"}>
+                        <Button onClick={handleSubmit} sx={{paddingInline: "1.5em", alignSelf: "start"}} variant={"contained"} type={"submit"}>
                             Save
                         </Button>
 

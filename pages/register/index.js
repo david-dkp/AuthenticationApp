@@ -32,11 +32,12 @@ function Register() {
     const handleLoginSubmit = async (e) => {
         e.preventDefault()
         const result = await authApi.register(email, password)
+
         if (result.data.error) {
             setEmailErrorText(result.data.error.email ?? "")
             setPasswordErrorText(result.data.error.password ?? "")
         }
-        console.log(result)
+
     }
 
     return <Box sx={{

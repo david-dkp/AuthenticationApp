@@ -1,8 +1,6 @@
 import '../styles/globals.css'
-import axiosConfig from "../apis/axiosConfig"
 import {createTheme, ThemeProvider} from "@mui/material";
 import {createContext, useEffect, useMemo, useState} from "react";
-import userApi from "../apis/userApi";
 import App from "next/app"
 
 const getTheme = (mode) => createTheme({
@@ -48,8 +46,6 @@ const getTheme = (mode) => createTheme({
     }
 });
 
-axiosConfig.configure()
-
 const ColorModeContext = createContext({
     toggleColorMode: () => {
     }, setColorMode: (mode) => {
@@ -73,10 +69,6 @@ function MyApp({Component, pageProps}) {
     );
 
     const getLayout = Component.getLayout || ((page) => page)
-
-    useEffect(() => {
-        userApi.getUser(1).then(r => console.log(r)).catch(e => console.log(e))
-    }, [])
 
     return (
         <ColorModeContext.Provider value={colorMode}>

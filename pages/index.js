@@ -2,6 +2,7 @@ import {useRouter} from "next/router";
 import {Box, Button, Typography} from "@mui/material";
 import HomeLayout from "../components/HomeLayout";
 import Footer from "../components/Footer";
+import userApi from "../apis/userApi";
 
 const ProfileHeader = () => {
     return (
@@ -101,16 +102,29 @@ Home.getLayout = (page) => (<HomeLayout>
     {page}
 </HomeLayout>)
 
-export function getStaticProps(context) {
-    return {
-        props: {
-            user: {
-                name: "Barry Allen",
-                bio: "This is the user's biographie",
-                photoUrl: "https://i.pravatar.cc/150?img=36",
-                phone: "0879456987",
-                email: "some.email@email.email",
-                passwordLength: 5,
+export async function getServerSideProps(context) {
+    try {
+        const response = await userApi.getAuthUser()
+
+        const user = response.data
+        if (!user) {
+            return {
+                redirect: {
+                    destination: "/login"
+                }
+            }
+        }
+
+        return {
+            props: {
+                user
+            }
+        }
+    } catch (e) {
+
+        return {
+            redirect: {
+                destination: "/login"
             }
         }
     }

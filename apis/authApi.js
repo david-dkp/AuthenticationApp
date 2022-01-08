@@ -1,4 +1,6 @@
-const axios = require("axios").default
+import * as Axios from "axios"
+
+const axios = Axios.default
 
 const login = async (email, password) => {
     return await axios.post("/api/login", {email, password})
@@ -8,5 +10,9 @@ const register = async (email, password) => {
     return await axios.post("/api/register", {email, password})
 }
 
-module.exports.login = login
-module.exports.register = register
+const authApi = {
+    login,
+    register
+}
+
+export default authApi
