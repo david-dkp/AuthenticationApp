@@ -73,7 +73,9 @@ function Login() {
                 minHeight: {
                     xs: "100vh",
                     sm: "auto"
-                }
+                },
+                width: "470px",
+                maxWidth: "100%",
             }} justifyContent={"space-between"} p={"10px"} alignItems={"center"} direction={"column"}>
             <Box sx={{
                 backgroundColor: "background.default",
@@ -82,7 +84,6 @@ function Login() {
                 border: {sm: "1px solid #BDBDBD"},
                 display: "flex",
                 width: "100%",
-                maxWidth: "470px",
                 flexDirection: "column",
                 alignItems: "center",
                 py: "clamp(8px, 7vw, 40px)",

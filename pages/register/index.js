@@ -74,7 +74,9 @@ function Register() {
             minHeight: {
                 xs: "100vh",
                 sm: "auto"
-            }
+            },
+            width: "470px",
+            maxWidth: "100%",
         }}
                justifyContent={"space-between"} p={"10px"} direction={"column"} alignItems={"center"}>
             <Box sx={{
@@ -84,7 +86,6 @@ function Register() {
                 border: {sm: "1px solid #BDBDBD"},
                 display: "flex",
                 width: "100%",
-                maxWidth: "470px",
                 flexDirection: "column",
                 alignItems: "center",
                 py: "clamp(8px, 7vw, 40px)",
