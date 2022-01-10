@@ -1,8 +1,6 @@
-import {useRouter} from "next/router";
 import {Box, Button, Typography} from "@mui/material";
 import HomeLayout from "../components/HomeLayout";
 import Footer from "../components/Footer";
-import userApi from "../apis/userApi";
 import * as Axios from "axios";
 import * as CookieParser from "cookie"
 
@@ -109,9 +107,11 @@ Home.getLayout = (page) => (<HomeLayout>
 export async function getServerSideProps(context) {
     try {
         const cookies = CookieParser.parse(context.req.headers.cookie)
-        const response = await axios.get("http://localhost:8000/user", {headers: {
+        const response = await axios.get("http://localhost:8000/user", {
+            headers: {
                 "Authorization": cookies["jwt"]
-            }})
+            }
+        })
         const user = response.data.data
         if (!user) {
             return {

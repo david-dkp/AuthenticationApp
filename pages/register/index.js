@@ -1,8 +1,10 @@
 import {
     Box,
     Button,
-    FormControl, IconButton,
-    InputAdornment, Link,
+    FormControl,
+    IconButton,
+    InputAdornment,
+    Link,
     Stack,
     TextField,
     Typography,
@@ -90,18 +92,29 @@ function Register() {
                 <FormControl sx={{
                     my: "15px"
                 }} fullWidth onSubmit={handleLoginSubmit}>
-                    <TextField value={email} onChange={e => setEmail(e.target.value)} id="register-input-email"
+                    <TextField value={email}
+                               onChange={e => setEmail(e.target.value)}
+                               id="register-input-email"
                                label="Email"
-                               type="email" variant="outlined" error={emailErrorText.length > 0} helperText={emailErrorText} InputProps={{
-                        startAdornment: (<InputAdornment position={"start"}>
-                            <EmailRounded/>
-                        </InputAdornment>)
-                    }}/>
+                               type="email"
+                               variant="outlined"
+                               error={emailErrorText.length > 0}
+                               helperText={emailErrorText}
+                               InputProps={{
+                                   startAdornment: (<InputAdornment position={"start"}>
+                                       <EmailRounded/>
+                                   </InputAdornment>)
+                               }}/>
 
-                    <TextField sx={{mt: "15px"}} value={password} error={passwordErrorText.length > 0} helperText={passwordErrorText}
+                    <TextField sx={{mt: "15px"}}
+                               value={password}
+                               error={passwordErrorText.length > 0}
+                               helperText={passwordErrorText}
                                onChange={e => setPassword(e.target.value)}
                                id="register-input-password"
-                               label="Password" type="password" variant="outlined"
+                               label="Password"
+                               type="password"
+                               variant="outlined"
                                InputProps={{
                                    startAdornment: (<InputAdornment position={"start"}>
                                        <LockRounded/>

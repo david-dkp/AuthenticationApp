@@ -1,5 +1,5 @@
 import React from "react"
-import {AppBar, Container, Menu, styled, Toolbar, useTheme} from "@mui/material";
+import {AppBar, Container, Toolbar, useTheme} from "@mui/material";
 import DevChallengesDarkImg from "../assets/devchallenges.svg";
 import DevChallengesLightImg from "../assets/devchallenges-light.svg";
 import ProfileMenu from "./ProfileMenu";

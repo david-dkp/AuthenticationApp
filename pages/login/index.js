@@ -5,7 +5,8 @@ import {
     FormControl,
     IconButton,
     InputAdornment,
-    Link, Snackbar,
+    Link,
+    Snackbar,
     Stack,
     TextField,
     Typography,
@@ -58,11 +59,11 @@ function Login() {
         </Snackbar>
         <Stack
             sx={{
-            minHeight: {
-                xs: "100vh",
-                sm: "auto"
-            }
-        }}  justifyContent={"space-between"} p={"10px"} alignItems={"center"} direction={"column"}>
+                minHeight: {
+                    xs: "100vh",
+                    sm: "auto"
+                }
+            }} justifyContent={"space-between"} p={"10px"} alignItems={"center"} direction={"column"}>
             <Box sx={{
                 backgroundColor: "background.default",
                 gap: "15px",

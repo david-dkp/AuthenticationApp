@@ -72,7 +72,9 @@ function ProfileMenu({menuProps, ...props}) {
                 height: "32px",
                 width: "32px"
             }} variant={"rounded"} src={"https://i.pravatar.cc/150?img=28"} alt={"Profile picture"}/>
-            <Typography sx={{display: {xs: "none", sm: "block"},fontWeight: "bold", fontSize: "12px"}} color={"text.primary"} component={"h3"}>Xanthe
+            <Typography sx={{display: {xs: "none", sm: "block"}, fontWeight: "bold", fontSize: "12px"}}
+                        color={"text.primary"}
+                        component={"h3"}>Xanthe
                 Neal</Typography>
             <ArrowDropDownRounded sx={{display: {xs: "none", sm: "block"}, color: "text.primary"}}/>
         </Button>

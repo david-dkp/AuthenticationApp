@@ -6,6 +6,13 @@ class UserRepository {
     #user = null
     #observers = []
 
+    static getInstance() {
+        if (!this.#instance) {
+            this.#instance = new UserRepository()
+        }
+        return this.#instance
+    }
+
     subscribe(observer) {
         this.#observers.push(observer)
         observer.onUserChange(this.#user)
@@ -27,13 +34,6 @@ class UserRepository {
 
     getUser() {
         return this.#user
-    }
-
-    static getInstance() {
-        if (!this.#instance) {
-            this.#instance = new UserRepository()
-        }
-        return this.#instance
     }
 }
 
