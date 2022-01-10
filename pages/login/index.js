@@ -22,11 +22,14 @@ import Twitter from "../../assets/Twitter.svg"
 import Github from "../../assets/Github.svg"
 import Footer from "../../components/Footer";
 import authApi from "../../apis/authApi";
+import {useRouter} from "next/router";
 
 function Login() {
     const [showError, setShowError] = useState(false)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+
+    const router = useRouter()
 
     const theme = useTheme()
     const devChallengesImage = theme.palette.mode === "light" ? DevChallengesDarkImg : DevChallengesLightImg
@@ -34,7 +37,10 @@ function Login() {
     const handleLoginSubmit = async (e) => {
         e.preventDefault()
         try {
-            await authApi.login(email, password)
+            const result = await authApi.login(email, password)
+            if (result.data.type === "success") {
+                await router.push("/")
+            }
         } catch (e) {
             setShowError(true)
         }
@@ -52,7 +58,12 @@ function Login() {
         <Snackbar anchorOrigin={{
             horizontal: "center",
             vertical: "top"
-        }} open={showError}>
+        }}
+                  open={showError}
+                  autoHideDuration={3000}
+                  onClose={() => setShowError(false)}
+
+        >
             <Alert severity={"error"} onClose={() => setShowError(false)}>
                 Wrong email or password !
             </Alert>
@@ -117,9 +128,7 @@ function Login() {
 
                 <Stack justifyContent={"center"} spacing={0.7} direction="row">
                     <IconButton href={"/api/login/google"}><img src={GoogleSvg.src} alt="Google"/></IconButton>
-                    <IconButton><img src={FacebookSvg.src} alt="Facebook"/></IconButton>
-                    <IconButton><img src={Twitter.src} alt="Twitter"/></IconButton>
-                    <IconButton><img src={Github.src} alt="Github"/></IconButton>
+                    <IconButton href={"/api/login/github"}><img src={Github.src} alt="Github"/></IconButton>
                 </Stack>
 
                 <Typography component={"span"} sx={{
@@ -131,7 +140,7 @@ function Login() {
                 }} href="/register">
                     <Typography
                         component={"span"} fontSize={"1em"}
-                        color={"blue"}> Register</Typography>
+                        color={"#2C8DC5"}> Register</Typography>
                 </Link></Typography>
             </Box>
             <Footer sx={{mt: "12px", fontSize: "0.8em", width: "100%"}}/>

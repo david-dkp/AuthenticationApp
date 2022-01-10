@@ -100,14 +100,16 @@ export default function Home({user}) {
     </Box>)
 }
 
-Home.getLayout = (page) => (<HomeLayout>
-    {page}
-</HomeLayout>)
+Home.getLayout = (page) => {
+    return (<HomeLayout user={page.props.user}>
+        {page}
+    </HomeLayout>)
+}
 
 export async function getServerSideProps(context) {
     try {
         const cookies = CookieParser.parse(context.req.headers.cookie)
-        const response = await axios.get("http://localhost:8000/user", {
+        const response = await axios.get(process.env.NEXT_PUBLIC_SERVER_URL+ "/user", {
             headers: {
                 "Authorization": cookies["jwt"]
             }

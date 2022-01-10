@@ -16,6 +16,7 @@ import {useEffect, useState} from "react";
 import userApi from "../../apis/userApi";
 import * as CookieParser from "cookie";
 import axios from "axios";
+import Footer from "../../components/Footer";
 
 const ChangeInfoHeader = () => {
     return (
@@ -66,7 +67,7 @@ const ChangePhoto = ({photoUrl, onFileSelected}) => {
                 justifyContent: "center",
                 alignItems: "center"
             }}>
-                <img style={{objectFit: "cover", width: "100%", height: "100%"}} src={photoUrl}
+                <img style={{objectFit: "cover", width: "100%", height: "100%"}} src={currentPhotoUrl}
                      alt={"Profile Picture"}
                 />
                 <Box sx={{
@@ -170,9 +171,10 @@ function EditProfile({user}) {
 
     return (
         <Box sx={{
-            maxWidth: "100vw", minHeight: "calc(90vh - 64px)", display: "flex", justifyContent: "center",
+            width: "100vw", minHeight: "calc(90vh - 64px)", display: "flex", justifyContent: "center",
             backgroundColor: "background.default",
             color: "text.primary",
+            paddingBottom: "15px",
         }}>
             <Snackbar
                 open={showAlert}
@@ -190,7 +192,6 @@ function EditProfile({user}) {
                 maxWidth: "845px",
                 flexDirection: "column",
                 alignItems: "center",
-                overflow: "visible",
                 gap: "10px",
             }}>
                 <Button style={{alignSelf: "start"}}
@@ -329,6 +330,7 @@ function EditProfile({user}) {
 
                     </FormControl>
                 </Box>
+                <Footer sx={{width: "100%"}}/>
             </Box>
         </Box>
     )
@@ -337,7 +339,7 @@ function EditProfile({user}) {
 export async function getServerSideProps(context) {
     try {
         const cookies = CookieParser.parse(context.req.headers.cookie)
-        const response = await axios.get("http://localhost:8000/user", {
+        const response = await axios.get(process.env.NEXT_PUBLIC_SERVER_URL+ "/user", {
             headers: {
                 "Authorization": cookies["jwt"]
             }
@@ -365,10 +367,10 @@ export async function getServerSideProps(context) {
     }
 }
 
-EditProfile.getLayout = (page) => (
-    <HomeLayout>
+EditProfile.getLayout = (page) => {
+    return (<HomeLayout user={page.props.user}>
         {page}
-    </HomeLayout>
-)
+    </HomeLayout>)
+}
 
 export default EditProfile

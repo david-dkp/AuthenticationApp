@@ -1,10 +1,11 @@
 import {
+    Alert,
     Box,
     Button,
     FormControl,
     IconButton,
     InputAdornment,
-    Link,
+    Link, Snackbar,
     Stack,
     TextField,
     Typography,
@@ -20,8 +21,11 @@ import Twitter from "../../assets/Twitter.svg"
 import Github from "../../assets/Github.svg"
 import Footer from "../../components/Footer";
 import authApi from "../../apis/authApi";
+import {useRouter} from "next/router";
 
 function Register() {
+    const router = useRouter()
+    const [showAlreadyExistAlert, setShowAlreadyExistAlert] = useState(false)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
@@ -35,10 +39,17 @@ function Register() {
         e.preventDefault()
         try {
             const result = await authApi.register(email, password)
+            if (result.data.type === "success") {
+                await router.push("/")
+            }
         } catch (e) {
             if (e.response.data.error) {
                 setEmailErrorText(e.response.data.error.email ?? "")
                 setPasswordErrorText(e.response.data.error.password ?? "")
+            } else if (e.response.data.message) {
+                setShowAlreadyExistAlert(true)
+                setEmailErrorText("")
+                setPasswordErrorText("")
             }
         }
     }
@@ -51,6 +62,14 @@ function Register() {
         minHeight: "100vh",
         backgroundColor: "background.default",
     }}>
+        <Snackbar autoHideDuration={3000} anchorOrigin={{
+            vertical: "top",
+            horizontal: "center"
+        }} open={showAlreadyExistAlert} onClose={() => setShowAlreadyExistAlert(false)}>
+            <Alert severity={"error"} onClose={() => setShowAlreadyExistAlert(false)}>
+                The user already exists !
+            </Alert>
+        </Snackbar>
         <Stack sx={{
             minHeight: {
                 xs: "100vh",
@@ -129,10 +148,8 @@ function Register() {
                 }}>or continue with these social profile</Typography>
 
                 <Stack justifyContent={"center"} spacing={0.7} direction="row">
-                    <IconButton><img src={GoogleSvg.src} alt="Google"/></IconButton>
-                    <IconButton><img src={FacebookSvg.src} alt="Facebook"/></IconButton>
-                    <IconButton><img src={Twitter.src} alt="Twitter"/></IconButton>
-                    <IconButton><img src={Github.src} alt="Github"/></IconButton>
+                    <IconButton href={"/api/login/google"}><img src={GoogleSvg.src} alt="Google"/></IconButton>
+                    <IconButton href={"/api/login/github"}><img src={Github.src} alt="Github"/></IconButton>
                 </Stack>
 
                 <Typography component={"span"} sx={{
@@ -144,7 +161,7 @@ function Register() {
                 }} href="/login">
                     <Typography
                         component={"span"} fontSize={"1em"}
-                        color={"blue"}> Login</Typography>
+                        color={"#2C8DC5"}> Login</Typography>
                 </Link></Typography>
 
             </Box>

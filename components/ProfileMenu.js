@@ -1,7 +1,19 @@
-import {Avatar, Button, Divider, Menu, MenuItem, styled, Typography} from "@mui/material";
+import {
+    Avatar,
+    Button,
+    Dialog, DialogActions,
+    DialogContent,
+    DialogContentText,
+    Divider,
+    Menu,
+    MenuItem,
+    styled,
+    Typography
+} from "@mui/material";
 import {AccountCircleRounded, ArrowDropDownRounded, ExitToAppRounded, PeopleRounded} from "@mui/icons-material";
 import React, {useState} from "react";
 import {useRouter} from "next/router";
+import authApi from "../apis/authApi";
 
 const StyledMenu = styled((props => (
     <Menu
@@ -37,18 +49,35 @@ const StyledMenu = styled((props => (
     },
 }))
 
-function ProfileMenu({menuProps, ...props}) {
+function ProfileMenu({user, menuProps, ...props}) {
+    const [showChatGroupDialog, setShowChatGroupDialog] = useState(false)
     const router = useRouter()
     const currentPath = router.pathname
-
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const handleCloseDialog = () => {
+        setShowChatGroupDialog(false)
+    }
+
+    const handleLogout = () => {
+        authApi.logout().then(r => {
+            if (r.data.type === "success") {
+                return router.push("/login")
+            }
+        })
+    }
+
+    const navigateTo = (path) => {
+        router.push(path)
+    }
 
     return (<>
         <Button sx={{
@@ -68,14 +97,23 @@ function ProfileMenu({menuProps, ...props}) {
                 onClick={handleClick}
                 {...props}
         >
+            <Dialog open={showChatGroupDialog} onClose={handleCloseDialog}>
+                <DialogContent>
+                    <DialogContentText>
+                        The Chat Group app is being developed, it's not released yet.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog}>Ok</Button>
+                </DialogActions>
+            </Dialog>
             <Avatar sx={{
                 height: "32px",
                 width: "32px"
-            }} variant={"rounded"} src={"https://i.pravatar.cc/150?img=28"} alt={"Profile picture"}/>
+            }} variant={"rounded"} src={user.photoUrl} alt={"Profile picture"}/>
             <Typography sx={{display: {xs: "none", sm: "block"}, fontWeight: "bold", fontSize: "12px"}}
                         color={"text.primary"}
-                        component={"h3"}>Xanthe
-                Neal</Typography>
+                        component={"h3"}>{user.name}</Typography>
             <ArrowDropDownRounded sx={{display: {xs: "none", sm: "block"}, color: "text.primary"}}/>
         </Button>
         <StyledMenu id="profile-menu" MenuListProps={{
@@ -86,16 +124,19 @@ function ProfileMenu({menuProps, ...props}) {
                     onClose={handleClose}
                     {...menuProps}
         >
-            <MenuItem>
+            <MenuItem selected={currentPath==="/"} onClick={() => {
+                navigateTo("/")
+                handleClose()
+            }}>
                 <AccountCircleRounded/>
                 My Profile
             </MenuItem>
-            <MenuItem>
+            <MenuItem onClick={() => setShowChatGroupDialog(true)}>
                 <PeopleRounded/>
                 Group Chat
             </MenuItem>
             <Divider/>
-            <MenuItem sx={{color: "#EB5757"}}>
+            <MenuItem onClick={handleLogout} sx={{color: "#EB5757"}}>
                 <ExitToAppRounded/>
                 Logout
             </MenuItem>

@@ -4,7 +4,7 @@ import DevChallengesDarkImg from "../assets/devchallenges.svg";
 import DevChallengesLightImg from "../assets/devchallenges-light.svg";
 import ProfileMenu from "./ProfileMenu";
 
-function Navbar() {
+function Navbar({user}) {
     const theme = useTheme()
     const devChallengesImage = theme.palette.mode === "light" ? DevChallengesDarkImg : DevChallengesLightImg
     return <AppBar elevation={0} sx={{
@@ -14,7 +14,7 @@ function Navbar() {
         <Container maxWidth={"lg"}>
             <Toolbar sx={{justifyContent: "space-between"}} disableGutters>
                 <img src={devChallengesImage.src} alt={"DevChallenges"}/>
-                <ProfileMenu/>
+                <ProfileMenu user={user}/>
             </Toolbar>
         </Container>
     </AppBar>
