@@ -135,7 +135,7 @@ function Login() {
                     width: "100%",
                     textAlign: "center",
                     color: "#828282", fontSize: "0.8em",
-                }} variant={"body2"}>Don't have an account yet?<Link sx={{
+                }} variant={"body2"}>{"Don't have an account yet?"}<Link sx={{
                     textDecoration: "none"
                 }} href="/register">
                     <Typography

@@ -100,7 +100,7 @@ function ProfileMenu({user, menuProps, ...props}) {
             <Dialog open={showChatGroupDialog} onClose={handleCloseDialog}>
                 <DialogContent>
                     <DialogContentText>
-                        The Chat Group app is being developed, it's not released yet.
+                        {"The Chat Group app is being developed, it's not released yet"}.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
