@@ -1,4 +1,4 @@
-import Navbar from "./Navbar";
+import Navbar from "./NavBar";
 import {Stack} from "@mui/material";
 
 function HomeLayout({user, children}) {
