@@ -31,13 +31,14 @@ function Register() {
 
     const handleLoginSubmit = async (e) => {
         e.preventDefault()
-        const result = await authApi.register(email, password)
-
-        if (result.data.error) {
-            setEmailErrorText(result.data.error.email ?? "")
-            setPasswordErrorText(result.data.error.password ?? "")
+        try {
+            const result = await authApi.register(email, password)
+        } catch (e) {
+            if (e.response.data.error) {
+                setEmailErrorText(e.response.data.error.email ?? "")
+                setPasswordErrorText(e.response.data.error.password ?? "")
+            }
         }
-
     }
 
     return <Box sx={{
@@ -47,17 +48,22 @@ function Register() {
         width: "100vw",
         minHeight: "100vh",
         backgroundColor: "background.default",
-        overflow: "scroll",
     }}>
-        <Stack m="10px" direction={"column"} alignItems={"center"}>
+        <Stack sx={{
+            minHeight: {
+                xs: "100vh",
+                sm: "auto"
+            }
+        }}
+               justifyContent={"space-between"} p={"10px"} direction={"column"} alignItems={"center"}>
             <Box sx={{
                 backgroundColor: "background.default",
                 gap: "15px",
                 borderRadius: "24px",
-                border: "1px solid #BDBDBD",
+                border: {sm: "1px solid #BDBDBD"},
                 display: "flex",
                 width: "100%",
-                maxWidth: 470,
+                maxWidth: "470px",
                 flexDirection: "column",
                 alignItems: "center",
                 py: "clamp(8px, 7vw, 40px)",
