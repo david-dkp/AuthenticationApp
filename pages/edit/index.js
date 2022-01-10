@@ -11,14 +11,11 @@ import {
     TextField,
     Typography
 } from "@mui/material";
-import {
-    ArrowBackIosRounded,
-    PhotoCameraRounded,
-    VisibilityOffRounded,
-    VisibilityRounded
-} from "@mui/icons-material";
+import {ArrowBackIosRounded, PhotoCameraRounded, VisibilityOffRounded, VisibilityRounded} from "@mui/icons-material";
 import {useEffect, useState} from "react";
 import userApi from "../../apis/userApi";
+import * as CookieParser from "cookie";
+import axios from "axios";
 
 const ChangeInfoHeader = () => {
     return (
@@ -107,11 +104,11 @@ function EditProfile({user}) {
     const [photoFileSelected, setPhotoFileSelected] = useState(null)
     const [showPassword, setShowPassword] = useState(false)
 
-    const [name, setName] = useState("")
-    const [bio, setBio] = useState("")
-    const [phoneNumber, setPhoneNumber] = useState("")
+    const [name, setName] = useState(user.name ?? "")
+    const [bio, setBio] = useState(user.bio ?? "")
+    const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber ?? "")
 
-    const [email, setEmail] = useState("")
+    const [email, setEmail] = useState(user.email ?? "")
     const [emailErrorText, setEmailErrorText] = useState("")
 
     const [password, setPassword] = useState("")
@@ -144,27 +141,29 @@ function EditProfile({user}) {
         const formData = new FormData()
 
         if (photoFileSelected) formData.append("photoFile", photoFileSelected)
-        if (name !== "") formData.append("name", name)
-        if (bio !== "") formData.append("bio", bio)
-        if (phoneNumber !== "") formData.append("phoneNumber", phoneNumber)
-
-        if (email !== "") formData.append("email", email)
+        formData.append("name", name)
+        formData.append("bio", bio)
+        formData.append("phoneNumber", phoneNumber)
+        formData.append("email", email)
         if (password !== "") formData.append("password", password)
 
         try {
-            const result = await userApi.updateUser(formData)
+            const result = await userApi.updateAuthUser(formData)
 
             if (result.data.type === "success") {
-                clearFields()
                 showSuccessAlert()
-            } else {
-                if (result.data.message) {
-                    return showErrorAlert(result.data.message)
-                }
+            }
+        } catch (e) {
+            const result = e.response
+
+            if (result.data.error) {
                 if (result.data.error.email) setEmailErrorText(result.data.error.email)
                 if (result.data.error.password) setPasswordErrorText(result.data.error.password)
             }
-        } catch (e) {
+
+            if (result.data.message) {
+                showErrorAlert(result.data.message)
+            }
             showErrorAlert("Something went wrong, please try again.")
         }
     }
@@ -177,9 +176,9 @@ function EditProfile({user}) {
         }}>
             <Snackbar
                 open={showAlert}
-                autoHideDuration={2000}
+                autoHideDuration={3000}
                 onClose={() => setShowAlert(false)}
-                >
+            >
                 <Alert onClose={() => setShowAlert(false)} severity={alertData.severity}>
                     {alertData.message}
                 </Alert>
@@ -220,14 +219,14 @@ function EditProfile({user}) {
                     <FormControl
                         onSubmit={e => console.log(e)}
                         sx={{
-                        maxWidth: "415px",
-                        gap: "2em",
-                        display: "flex",
-                        flexDirection: "column",
-                        "label": {
-                            fontSize: "0.81em"
-                        }
-                    }}
+                            maxWidth: "415px",
+                            gap: "2em",
+                            display: "flex",
+                            flexDirection: "column",
+                            "label": {
+                                fontSize: "0.81em"
+                            }
+                        }}
                     >
                         <Stack alignItems={"center"} flexDirection={"row"}>
                             <ChangePhoto photoUrl={user.photoUrl} onFileSelected={setPhotoFileSelected}/>
@@ -241,42 +240,90 @@ function EditProfile({user}) {
 
                         <Stack gap={"5px"}>
                             <label htmlFor="edit-profile-name-input">Name</label>
-                            <TextField name={"name"} InputProps={{sx: { fontSize: "1em"}}} sx={{fontSize: "1em"}} placeholder={"Enter your name..."} id="edit-profile-name-input" variant="outlined"/>
+                            <TextField value={name}
+                                       onChange={(e) => setName(e.target.value)}
+                                       name={"name"}
+                                       InputProps={{sx: {fontSize: "1em"}}}
+                                       sx={{fontSize: "1em"}}
+                                       placeholder={"Enter your name..."}
+                                       id="edit-profile-name-input"
+                                       variant="outlined"/>
                         </Stack>
 
                         <Stack gap={"5px"}>
                             <label htmlFor="edit-profile-bio-input">Bio</label>
-                            <TextField name={"bio"} InputProps={{sx: { fontSize: "1em"}}} sx={{fontSize: "1em"}} placeholder={"Enter your bio..."} minRows={3} type={"text"} multiline id="edit-profile-bio-input" variant="outlined"/>
+                            <TextField value={bio}
+                                       onChange={(e) => setBio(e.target.value)}
+                                       name={"bio"}
+                                       InputProps={{sx: {fontSize: "1em"}}}
+                                       sx={{fontSize: "1em"}}
+                                       placeholder={"Enter your bio..."}
+                                       minRows={3}
+                                       type={"text"}
+                                       multiline
+                                       id="edit-profile-bio-input"
+                                       variant="outlined"/>
                         </Stack>
 
                         <Stack gap={"5px"}>
                             <label htmlFor="edit-profile-phone-input">Phone</label>
-                            <TextField name={"phone"} InputProps={{sx: { fontSize: "1em"}}} sx={{fontSize: "1em"}} type={"tel"} placeholder={"Enter your phone..."} id="edit-profile-phone-input" variant="outlined"/>
+                            <TextField value={phoneNumber}
+                                       onChange={(e) => setPhoneNumber(e.target.value)}
+                                       name={"phone"}
+                                       InputProps={{sx: {fontSize: "1em"}}}
+                                       sx={{fontSize: "1em"}}
+                                       type={"tel"}
+                                       placeholder={"Enter your phone..."}
+                                       id="edit-profile-phone-input"
+                                       variant="outlined"/>
                         </Stack>
 
                         <Stack gap={"5px"}>
                             <label htmlFor="edit-profile-email-input">Email</label>
-                            <TextField error={emailErrorText !== ""} helperText={emailErrorText} name={"email"} InputProps={{sx: { fontSize: "1em"}}} sx={{fontSize: "1em"}} type={"email"}  placeholder={"Enter your email..."} id="edit-profile-email-input" variant="outlined"/>
+                            <TextField value={email}
+                                       onChange={(e) => setEmail(e.target.value)}
+                                       error={emailErrorText !== ""}
+                                       helperText={emailErrorText}
+                                       name={"email"}
+                                       InputProps={{sx: {fontSize: "1em"}}}
+                                       sx={{fontSize: "1em"}}
+                                       type={"email"}
+                                       placeholder={"Enter your email..."}
+                                       id="edit-profile-email-input"
+                                       variant="outlined"/>
                         </Stack>
 
                         <Stack gap={"5px"}>
                             <label htmlFor="edit-profile-password-input">Password</label>
-                            <TextField error={passwordErrorText !== ""} helperText={passwordErrorText} name={"password"} InputProps={{
-                                sx: {fontSize: "1em"},
-                                endAdornment: <InputAdornment position={"end"}>
-                                    <IconButton
-                                        aria-label={"toggle password visibility"}
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        onMouseDown={e => e.preventDefault()}
-                                        edge={"end"}
-                                        >
-                                        {showPassword ? <VisibilityOffRounded/> : <VisibilityRounded />}
-                                    </IconButton>
-                                </InputAdornment>
-                            }} sx={{fontSize: "1em"}} type={showPassword ? "text" : "password"} placeholder={"Enter your password..."} id="edit-profile-password-input" variant="outlined"/>
+                            <TextField value={password}
+                                       onChange={(e) => setPassword(e.target.value)}
+                                       error={passwordErrorText !== ""}
+                                       helperText={passwordErrorText}
+                                       name={"password"}
+                                       InputProps={{
+                                           sx: {fontSize: "1em"},
+                                           endAdornment: <InputAdornment position={"end"}>
+                                               <IconButton
+                                                   aria-label={"toggle password visibility"}
+                                                   onClick={() => setShowPassword(!showPassword)}
+                                                   onMouseDown={e => e.preventDefault()}
+                                                   edge={"end"}
+                                               >
+                                                   {showPassword ? <VisibilityOffRounded/> : <VisibilityRounded/>}
+                                               </IconButton>
+                                           </InputAdornment>
+                                       }}
+                                       sx={{fontSize: "1em"}}
+                                       type={showPassword ? "text" : "password"}
+                                       placeholder={"Enter your password..."}
+                                       id="edit-profile-password-input"
+                                       variant="outlined"/>
                         </Stack>
 
-                        <Button onClick={handleSubmit} sx={{paddingInline: "1.5em", alignSelf: "start"}} variant={"contained"} type={"submit"}>
+                        <Button onClick={handleSubmit}
+                                sx={{paddingInline: "1.5em", alignSelf: "start"}}
+                                variant={"contained"}
+                                type={"submit"}>
                             Save
                         </Button>
 
@@ -287,16 +334,32 @@ function EditProfile({user}) {
     )
 }
 
-export function getStaticProps(context) {
-    return {
-        props: {
-            user: {
-                name: "Barry Allen",
-                bio: "This is the user's biographie",
-                photoUrl: "https://i.pravatar.cc/150?img=36",
-                phone: "0879456987",
-                email: "some.email@email.email",
-                passwordLength: 5,
+export async function getServerSideProps(context) {
+    try {
+        const cookies = CookieParser.parse(context.req.headers.cookie)
+        const response = await axios.get("http://localhost:8000/user", {
+            headers: {
+                "Authorization": cookies["jwt"]
+            }
+        })
+        const user = response.data.data
+        if (!user) {
+            return {
+                redirect: {
+                    destination: "/login"
+                }
+            }
+        }
+
+        return {
+            props: {
+                user
+            }
+        }
+    } catch (e) {
+        return {
+            redirect: {
+                destination: "/login"
             }
         }
     }

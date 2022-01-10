@@ -3,6 +3,10 @@ import {Box, Button, Typography} from "@mui/material";
 import HomeLayout from "../components/HomeLayout";
 import Footer from "../components/Footer";
 import userApi from "../apis/userApi";
+import * as Axios from "axios";
+import * as CookieParser from "cookie"
+
+const axios = Axios.default
 
 const ProfileHeader = () => {
     return (
@@ -89,9 +93,9 @@ export default function Home({user}) {
                 </UserInfo>
                 <UserInfo name={"name"}>{user.name}</UserInfo>
                 <UserInfo name={"bio"}>{user.bio}</UserInfo>
-                <UserInfo name={"phone"}>{user.phone}</UserInfo>
+                <UserInfo name={"phone"}>{user.phoneNumber}</UserInfo>
                 <UserInfo name={"email"}>{user.email}</UserInfo>
-                <UserInfo name={"password"}>{Array.from({length: user.passwordLength}, (_, i) => "*").join("")}</UserInfo>
+                <UserInfo name={"password"}>{Array.from({length: 5}, (_, i) => "*").join("")}</UserInfo>
             </Box>
             <Footer sx={{width: "100%"}}/>
         </Box>
@@ -104,9 +108,11 @@ Home.getLayout = (page) => (<HomeLayout>
 
 export async function getServerSideProps(context) {
     try {
-        const response = await userApi.getAuthUser()
-
-        const user = response.data
+        const cookies = CookieParser.parse(context.req.headers.cookie)
+        const response = await axios.get("http://localhost:8000/user", {headers: {
+                "Authorization": cookies["jwt"]
+            }})
+        const user = response.data.data
         if (!user) {
             return {
                 redirect: {
@@ -121,7 +127,6 @@ export async function getServerSideProps(context) {
             }
         }
     } catch (e) {
-
         return {
             redirect: {
                 destination: "/login"
