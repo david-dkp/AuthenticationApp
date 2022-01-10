@@ -47,7 +47,6 @@ function Login() {
         width: "100vw",
         minHeight: "100vh",
         backgroundColor: "background.default",
-        overflow: "scroll",
     }}>
         <Snackbar anchorOrigin={{
             horizontal: "center",
