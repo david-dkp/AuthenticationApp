@@ -14,7 +14,7 @@ import {
 import DevChallengesLightImg from "../../assets/devchallenges-light.svg"
 import DevChallengesDarkImg from "../../assets/devchallenges.svg"
 import {EmailRounded, LockRounded} from "@mui/icons-material";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import GoogleSvg from "../../assets/Google.svg"
 import FacebookSvg from "../../assets/Facebook.svg"
 import Twitter from "../../assets/Twitter.svg"
@@ -25,6 +25,7 @@ import {useRouter} from "next/router";
 
 function Register() {
     const router = useRouter()
+
     const [showAlreadyExistAlert, setShowAlreadyExistAlert] = useState(false)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -39,8 +40,8 @@ function Register() {
         e.preventDefault()
         try {
             const result = await authApi.register(email, password)
-            if (result.data.type === "success") {
-                await router.push("/")
+            if (result.request.responseURL && result.request.responseURL !== window.location.href) {
+                await router.push(result.request.responseURL)
             }
         } catch (e) {
             if (e.response.data.error) {
