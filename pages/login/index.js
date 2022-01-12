@@ -15,7 +15,7 @@ import {
 import DevChallengesLightImg from "../../assets/devchallenges-light.svg"
 import DevChallengesDarkImg from "../../assets/devchallenges.svg"
 import {EmailRounded, LockRounded} from "@mui/icons-material";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import GoogleSvg from "../../assets/Google.svg"
 import FacebookSvg from "../../assets/Facebook.svg"
 import Twitter from "../../assets/Twitter.svg"
@@ -25,21 +25,34 @@ import authApi from "../../apis/authApi";
 import {useRouter} from "next/router";
 
 function Login() {
+    const router = useRouter()
+
+    const { successful_register } = router.query
+    const [showAlert, setShowAlert] = useState(false)
+    const [alertData, setAlertData] = useState({})
+
     const [showError, setShowError] = useState(false)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
-    const router = useRouter()
-
     const theme = useTheme()
     const devChallengesImage = theme.palette.mode === "light" ? DevChallengesDarkImg : DevChallengesLightImg
+
+    const showSuccessRegisterAlert = () => {
+        setAlertData({severity: "success", message: "Your account has been registered. You can log in :D !"})
+        setShowAlert(true)
+    }
+
+    useEffect(() => {
+        if (successful_register) showSuccessRegisterAlert()
+    }, [])
 
     const handleLoginSubmit = async (e) => {
         e.preventDefault()
         try {
             const result = await authApi.login(email, password)
-            if (result.data.type === "success") {
-                await router.push("/")
+            if (result.request.responseURL && result.request.responseURL !== window.location.href) {
+                await router.push(result.request.responseURL)
             }
         } catch (e) {
             setShowError(true)
@@ -68,6 +81,17 @@ function Login() {
                 Wrong email or password !
             </Alert>
         </Snackbar>
+
+        <Snackbar
+            open={showAlert}
+            autoHideDuration={3000}
+            onClose={() => setShowAlert(false)}
+        >
+            <Alert onClose={() => setShowAlert(false)} severity={alertData.severity}>
+                {alertData.message}
+            </Alert>
+        </Snackbar>
+
         <Stack
             sx={{
                 minHeight: {
