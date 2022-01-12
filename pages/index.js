@@ -110,8 +110,9 @@ export default function Home({user}) {
                         overflow: "hidden",
                         width: "72px"
                     }}>
-                        <img style={{width: "100%"}} src={user.photoUrl}
-                             alt={"Profile Picture"}/>
+                        <img style={{objectFit: "cover", width: "100%", height: "100%"}} src={user.photoUrl}
+                             alt={"Profile Picture"}
+                        />
                     </Box>
                 </UserInfo>
                 <UserInfo name={"name"}>{user.name}</UserInfo>
