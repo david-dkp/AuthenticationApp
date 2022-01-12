@@ -1,6 +1,6 @@
 <!-- Please update value in the {}  -->
 
-<h1 align="center">{Your project name}</h1>
+<h1 align="center">Authentication App - Front-end</h1>
 
 <div align="center">
    Solution for a challenge from  <a href="http://devchallenges.io" target="_blank">Devchallenges.io</a>.
@@ -8,11 +8,11 @@
 
 <div align="center">
   <h3>
-    <a href="https://{your-demo-link.your-domain}">
+    <a href="https://authentication-app-woad.vercel.app/">
       Demo
     </a>
     <span> | </span>
-    <a href="https://{your-url-to-the-solution}">
+    <a href="https://devchallenges.io/solutions/nM7HeFb3gII4lGBkSBt2">
       Solution
     </a>
     <span> | </span>
@@ -39,11 +39,11 @@
 
 ![screenshot](https://user-images.githubusercontent.com/16707738/92399059-5716eb00-f132-11ea-8b14-bcacdc8ec97b.png)
 
-Introduce your projects by taking a screenshot or a gif. Try to tell visitors a story about your project by answering:
-
-- Where can I see your demo?
-- What was your experience?
-- What have you learned/improved?
+- Where can I see your demo? Right here :D : https://authentication-app-woad.vercel.app/
+- What was your experience?  
+  Awesome simple app that learns you many things about security, input validation, and sessions! I really struggled to put the front-end and back-end together, being a full-stack dev is exhausting xD. My mistake here was that I was trying to do both at the SAME time. My mind was going crazy by switching between the front-end and back-end. I don't recommend doing that for efficiency. I should've first written down the endpoints, the models, then start front-end or back-end first.
+- What have you learned/improved?  
+I learned the concept of Next.js, the server side rendering, the caching and so on. I learned the Material UI styling system, and used some components that I found really useful.
 - Your wisdom? :)
 
 ### Built With
@@ -51,14 +51,21 @@ Introduce your projects by taking a screenshot or a gif. Try to tell visitors a 
 <!-- This section should list any major frameworks that you built your project using. Here are a few examples.-->
 
 - [React](https://reactjs.org/)
-- [Vue.js](https://vuejs.org/)
-- [Tailwind](https://tailwindcss.com/)
+- [Next](https://nextjs.org/)
+- [Material UI](https://mui.com/)
 
 ## Features
 
 <!-- List the features of your application or follow the template. Don't share the figma file here :) -->
 
 This application/site was created as a submission to a [DevChallenges](https://devchallenges.io/challenges) challenge. The [challenge](https://devchallenges.io/challenges/N1fvBjQfhlkctmwj1tnw) was to build an application to complete the given user storie.
+* User story: I can register a new account
+* User story: I can log in
+* User story: I can log in or register with at least one of the following services: Google, Facebook, Twitter or Github
+* User story: I can sign out
+* User story: I can see my profile details
+* User story: I can edit my details including: photo, name, bio, phone, email and password
+* User story: I can upload a new photo or provide an image URL
 
 ## How To Use
 
@@ -77,16 +84,11 @@ $ npm install
 $ npm start
 ```
 
-## Acknowledgements
-
-<!-- This section should list any articles or add-ons/plugins that helps you to complete the project. This is optional but it will help you in the future. For example -->
-
-- [Steps to replicate a design with only HTML and CSS](https://devchallenges-blogs.web.app/how-to-replicate-design/)
-- [Node.js](https://nodejs.org/)
-- [Marked - a markdown parser](https://github.com/chjj/marked)
-
 ## Contact
 
-- Website [your-website.com](https://{your-web-site-link})
-- GitHub [@your-username](https://{github.com/your-usermame})
-- Twitter [@your-twitter](https://{twitter.com/your-username})
+- Website [dekeuwerdavid.fr](https://dekeuwerdavid.fr)
+- GitHub [@david-dkp](https://github.com/david-dkp)
+- LinkedIn [David Dekeuwer](https://www.linkedin.com/in/david-dekeuwer-1940a01b9/)
+
+## More
+You can check my back-end here too :D : https://github.com/david-dkp/AuthenticationApp-Server
