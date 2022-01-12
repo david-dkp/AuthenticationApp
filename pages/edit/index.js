@@ -17,6 +17,7 @@ import userApi from "../../apis/userApi";
 import * as CookieParser from "cookie";
 import axios from "axios";
 import Footer from "../../components/Footer";
+import {useRouter} from "next/router";
 
 const ChangeInfoHeader = () => {
     return (
@@ -102,6 +103,8 @@ const ChangePhoto = ({photoUrl, onFileSelected}) => {
 }
 
 function EditProfile({user}) {
+    const router = useRouter()
+
     const [photoFileSelected, setPhotoFileSelected] = useState(null)
     const [showPassword, setShowPassword] = useState(false)
 
@@ -152,7 +155,7 @@ function EditProfile({user}) {
             const result = await userApi.updateAuthUser(formData)
 
             if (result.data.type === "success") {
-                showSuccessAlert()
+                router.push("/")
             }
         } catch (e) {
             const result = e.response
