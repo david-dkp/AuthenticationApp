@@ -96,7 +96,7 @@ function Login() {
             </DialogContent>
             <DialogActions>
                 <Button onClick={() => setShowGuessDialog(false)} color={"secondary"}>Cancel</Button>
-                <Button onClick={loginAsGuess} color={"success"}>It's fine</Button>
+                <Button onClick={loginAsGuess} color={"success"}>{"It's fine"}</Button>
             </DialogActions>
         </Dialog>
         <Snackbar anchorOrigin={{
