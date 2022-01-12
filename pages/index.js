@@ -1,8 +1,10 @@
-import {Box, Button, Typography} from "@mui/material";
+import {Alert, Box, Button, Snackbar, Typography} from "@mui/material";
 import HomeLayout from "../components/HomeLayout";
 import Footer from "../components/Footer";
 import * as Axios from "axios";
 import * as CookieParser from "cookie"
+import {useRouter} from "next/router";
+import {useEffect, useState} from "react";
 
 const axios = Axios.default
 
@@ -45,6 +47,20 @@ const UserInfo = ({name, children, sx, ...props}) => (<Box sx={{
 </Box>)
 
 export default function Home({user}) {
+    const router = useRouter()
+    const { successful_edit } = router.query
+
+    const [showAlert, setShowAlert] = useState(false)
+    const [alertData, setAlertData] = useState({})
+
+    const showSuccessEditAlert = () => {
+        setAlertData({severity: "success", message: "Your info has successfully been updated"})
+        setShowAlert(true)
+    }
+
+    useEffect(() => {
+        if (successful_edit) showSuccessEditAlert()
+    }, [])
 
     return (<Box sx={{
         width: "100vw", minHeight: "calc(90vh - 64px)", display: "flex", justifyContent: "center",
@@ -52,6 +68,15 @@ export default function Home({user}) {
         color: "text.primary"
 
     }}>
+        <Snackbar
+            open={showAlert}
+            autoHideDuration={3000}
+            onClose={() => setShowAlert(false)}
+        >
+            <Alert onClose={() => setShowAlert(false)} severity={alertData.severity}>
+                {alertData.message}
+            </Alert>
+        </Snackbar>
         <Box sx={{
             display: "flex",
             width: "100%",
