@@ -2,6 +2,11 @@ import {
     Alert,
     Box,
     Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
     FormControl,
     IconButton,
     InputAdornment,
@@ -24,8 +29,9 @@ import {useRouter} from "next/router";
 
 function Login() {
     const router = useRouter()
-
     const {successful_register} = router.query
+
+    const [showGuessDialog, setShowGuessDialog] = useState(false)
     const [showAlert, setShowAlert] = useState(false)
     const [alertData, setAlertData] = useState({})
 
@@ -57,6 +63,21 @@ function Login() {
         }
     }
 
+    const handleLoginGuess = (e) => {
+        setShowGuessDialog(true)
+    }
+
+    const loginAsGuess = async (e) => {
+        try {
+            const result = await authApi.loginAsGuess()
+            if (result.request.responseURL && result.request.responseURL !== window.location.href) {
+                await router.push(result.request.responseURL)
+            }
+        } catch (e) {
+            setShowError(true)
+        }
+    }
+
     return <Box sx={{
         display: "flex",
         justifyContent: "center",
@@ -66,6 +87,18 @@ function Login() {
         minHeight: "100vh",
         backgroundColor: "background.default",
     }}>
+        <Dialog open={showGuessDialog}>
+            <DialogTitle>Guess mode</DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    This guess account will be destroyed if you logout and it will only be available for 24 hours.
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={() => setShowGuessDialog(false)} color={"secondary"}>Cancel</Button>
+                <Button onClick={loginAsGuess} color={"success"}>It's fine</Button>
+            </DialogActions>
+        </Dialog>
         <Snackbar anchorOrigin={{
             horizontal: "center",
             vertical: "top"
@@ -144,6 +177,10 @@ function Login() {
 
                     <Button sx={{mt: "20px"}} type="submit" onClick={handleLoginSubmit} variant="contained"
                             fullWidth>Login</Button>
+                    <Button sx={{mt: "10px", textTransform: "none"}}
+                            onClick={handleLoginGuess}
+                            color={"secondary"}
+                            variant={"outlined"}>Login as Guess</Button>
                 </FormControl>
                 <Typography variant={"body2"} component="p" sx={{
                     color: "#828282", fontSize: "0.8em",

@@ -6,6 +6,10 @@ const login = async (email, password) => {
     return await axios.post("/api/login", {email, password})
 }
 
+const loginAsGuess = async() => {
+    return await axios.post("/api/login/guess")
+}
+
 const register = async (email, password) => {
     return await axios.post("/api/register", {email, password})
 }
@@ -17,7 +21,8 @@ const logout = async () => {
 const authApi = {
     login,
     register,
-    logout
+    logout,
+    loginAsGuess
 }
 
 export default authApi
