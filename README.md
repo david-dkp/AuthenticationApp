@@ -73,16 +73,23 @@ This application/site was created as a submission to a [DevChallenges](https://d
 
 To clone and run this application, you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) installed on your computer. From your command line:
 
+Then to start the Next app:
 ```bash
 # Clone this repository
-$ git clone https://github.com/your-user-name/your-project-name
+$ git clone https://github.com/david-dkp/AuthenticationApp.git
 
 # Install dependencies
 $ npm install
 
 # Run the app
-$ npm start
+$ npm run dev
 ```
+After cloning, you'll need to create a '.env.local' file, in which you'll put the following key:
+```
+NEXT_PUBLIC_SERVER_URL=http://localhost:8000
+```
+
+You will also need to start the server, which you can clone the project here: https://github.com/david-dkp/AuthenticationApp-Server 
 
 ## Contact
 
