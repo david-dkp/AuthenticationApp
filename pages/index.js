@@ -48,7 +48,7 @@ const UserInfo = ({name, children, sx, ...props}) => (<Box sx={{
 
 export default function Home({user}) {
     const router = useRouter()
-    const { successful_edit } = router.query
+    const {successful_edit} = router.query
 
     const [showAlert, setShowAlert] = useState(false)
     const [alertData, setAlertData] = useState({})
@@ -134,7 +134,7 @@ Home.getLayout = (page) => {
 export async function getServerSideProps(context) {
     try {
         const cookies = CookieParser.parse(context.req.headers.cookie)
-        const response = await axios.get(process.env.NEXT_PUBLIC_SERVER_URL+ "/user", {
+        const response = await axios.get(process.env.NEXT_PUBLIC_SERVER_URL + "/user", {
             headers: {
                 "Authorization": cookies["jwt"]
             }

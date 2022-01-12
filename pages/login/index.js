@@ -17,8 +17,6 @@ import DevChallengesDarkImg from "../../assets/devchallenges.svg"
 import {EmailRounded, LockRounded} from "@mui/icons-material";
 import {useEffect, useState} from "react";
 import GoogleSvg from "../../assets/Google.svg"
-import FacebookSvg from "../../assets/Facebook.svg"
-import Twitter from "../../assets/Twitter.svg"
 import Github from "../../assets/Github.svg"
 import Footer from "../../components/Footer";
 import authApi from "../../apis/authApi";
@@ -27,7 +25,7 @@ import {useRouter} from "next/router";
 function Login() {
     const router = useRouter()
 
-    const { successful_register } = router.query
+    const {successful_register} = router.query
     const [showAlert, setShowAlert] = useState(false)
     const [alertData, setAlertData] = useState({})
 

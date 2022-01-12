@@ -121,11 +121,6 @@ function EditProfile({user}) {
     const [alertData, setAlertData] = useState({})
     const [showAlert, setShowAlert] = useState(false)
 
-    const showSuccessAlert = () => {
-        setAlertData({severity: "success", message: "Your info has successfully been updated"})
-        setShowAlert(true)
-    }
-
     const showErrorAlert = (message) => {
         setAlertData({severity: "error", message})
         setShowAlert(true)
@@ -155,7 +150,7 @@ function EditProfile({user}) {
             const result = await userApi.updateAuthUser(formData)
 
             if (result.data.type === "success") {
-                router.push("/")
+                await router.push("/?successful_edit=true")
             }
         } catch (e) {
             const result = e.response
@@ -342,7 +337,7 @@ function EditProfile({user}) {
 export async function getServerSideProps(context) {
     try {
         const cookies = CookieParser.parse(context.req.headers.cookie)
-        const response = await axios.get(process.env.NEXT_PUBLIC_SERVER_URL+ "/user", {
+        const response = await axios.get(process.env.NEXT_PUBLIC_SERVER_URL + "/user", {
             headers: {
                 "Authorization": cookies["jwt"]
             }
